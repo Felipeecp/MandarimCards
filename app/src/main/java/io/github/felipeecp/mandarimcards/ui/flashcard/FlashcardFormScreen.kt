@@ -2,8 +2,10 @@
 
 package io.github.felipeecp.mandarimcards.ui.flashcard
 
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -19,10 +21,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.felipeecp.mandarimcards.data.local.entities.Flashcard
+import io.github.felipeecp.mandarimcards.ui.theme.MandarimCardsTheme
 
 @Composable
 fun FlashcardFormScreen(
@@ -65,29 +70,33 @@ fun FlashcardFormScreen(
             onValueChange = {meaning = it},
             label = { Text("Meaning") }
         )
-        Button(onClick= {
-            val newFlashcard = Flashcard(character=character, pinyin = pinyin, meaning = meaning)
-            if(flashcard == null){
-                viewModel.insert(newFlashcard)
-            }else{
-                viewModel.update(newFlashcard.copy(id = flashcardId))
+        Row {
+            Button(
+                modifier = Modifier.padding(16.dp),
+                onClick= {
+                val newFlashcard = Flashcard(character=character, pinyin = pinyin, meaning = meaning)
+                if(flashcard == null){
+                    viewModel.insert(newFlashcard)
+                }else{
+                    viewModel.update(newFlashcard.copy(id = flashcardId))
+                }
+                navController.popBackStack()
+            }){
+                Text(text = if (flashcard == null) "Adicionar" else "Atualizar")
             }
-            navController.popBackStack()
-        }){
-            Text(text = if (flashcard == null) "Add" else "Update")
-        }
-        if(flashcard != null){
-            Button(onClick= {
-                    flashcard?.let {viewModel.delete(it)}
-                    navController.popBackStack()
-                },
-                modifier = Modifier.padding(16.dp)
+            if(flashcard != null){
+                Button(
+                    modifier = Modifier.padding(16.dp),
+                    onClick= {
+                        flashcard?.let {viewModel.delete(it)}
+                        navController.popBackStack()
+                    },
                 )
-            {
-                Text(text = "Delete")
+                {
+                    Text(text = "Apagar")
+                }
             }
         }
+
     }
-
-
 }

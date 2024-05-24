@@ -16,7 +16,7 @@ fun NavGraph(navController: NavHostController, viewModel: FlashCardViewModel, in
         composable("flashcard_list") {
             FlashcardListScreen(viewModel = viewModel, navController = navController, innerPadding)
         }
-        composable(route = "flashcard_form", arguments = listOf(navArgument("flashcardId"){defaultValue=-1})
+        composable(route = "flashcard_form/{flashcardId}", arguments = listOf(navArgument("flashcardId"){defaultValue=-1})
         ){ backStateEntry->
             val flashcardId = backStateEntry.arguments?.getInt("flashcardId")?:-1
             FlashcardFormScreen(viewModel = viewModel,navController,innerPadding,flashcardId)
